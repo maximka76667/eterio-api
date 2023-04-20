@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from typing import List
 
 class UserCreate(BaseModel):
     email: str
@@ -18,3 +18,4 @@ class User(BaseModel):
     id: str
     email: str
     name: str
+    favourite_drinks: List[str] = []
