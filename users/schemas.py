@@ -6,6 +6,9 @@ class UserCreate(BaseModel):
     name: str
     password: str
 
+class UserUpdate(BaseModel):
+    email: str
+    name: str
 
 class UserInDb(UserCreate):
     id: str
