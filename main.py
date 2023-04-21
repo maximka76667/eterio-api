@@ -24,4 +24,3 @@ app.include_router(drinks_router, prefix="/drinks", tags=["drinks"])
 
 def start():
     uvicorn.run("main:app", host="localhost", port=8000, reload=True)
-    print("Server started")
