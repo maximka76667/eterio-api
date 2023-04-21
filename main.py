@@ -6,6 +6,8 @@ import os
 from firebase_admin import credentials, firestore, initialize_app
 
 from users.routes import router as user_router
+from drinks.routes import router as drinks_router
+
 
 # Create a Firebase Admin SDK credentials object
 cred = credentials.Certificate(
@@ -17,6 +19,8 @@ app = FastAPI()
 
 
 app.include_router(user_router, prefix="/users", tags=["users"])
+app.include_router(drinks_router, prefix="/drinks", tags=["drinks"])
+
 
 def start():
     uvicorn.run("main:app", host="localhost", port=8000, reload=True)
