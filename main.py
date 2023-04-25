@@ -5,7 +5,7 @@ from google.cloud import firestore
 import os
 from firebase_admin import credentials, firestore, initialize_app
 
-from users.routes import router as user_router
+from users.routes import router as users_router
 from drinks.routes import router as drinks_router
 
 
@@ -18,9 +18,5 @@ initialize_app(cred)
 app = FastAPI()
 
 
-app.include_router(user_router, prefix="/users", tags=["users"])
+app.include_router(users_router, prefix="/users", tags=["users"])
 app.include_router(drinks_router, prefix="/drinks", tags=["drinks"])
-
-
-def start():
-    uvicorn.run("main:app", host="localhost", port=8000, reload=True)

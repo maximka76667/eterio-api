@@ -23,7 +23,7 @@ async def get_drink(drink_id: str, bd: firestore.client = Depends()):
     drink = doc_ref.get()
     if drink.exists:
         drink_data = drink.to_dict()
-        drink_out_db = DrinkOutDB(**drink_data, id=drink_id)
+        drink_out_db = DrinkOutDB(id=drink_id, **drink_data)
         return drink_out_db
     else:
         raise HTTPException(status_code=404, detail="Drink not found")

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from fastapi import status
+from typing import Dict
 from firebase_admin import firestore
 from fastapi.responses import JSONResponse
 from fastapi import HTTPException
@@ -101,3 +102,40 @@ def delete_user(user_id: str, db: firestore.client = Depends()):
         return User(**doc.to_dict())
     else:
         raise HTTPException(status_code=404, detail="User not found")
+
+
+@router.put("/{user_id}/favs/{drink_id}")
+async def add_fav(user_id: str, drink_id: str, db: firestore.client = Depends()):
+    user_ref = db.collection("users").document(user_id)
+    user_doc = user_ref.get()
+
+    if not user_doc.exists:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    user_data = user_doc.to_dict()
+
+    if "favourite_drinks" not in user_data:
+        user_data["favourite_drinks"] = []
+
+    if drink_id not in user_data["favourite_drinks"]:
+        user_data["favourite_drinks"].append(drink_id)
+        user_ref.update({"favourite_drinks": user_data["favourite_drinks"]})
+
+    return User(**user_ref.get().to_dict())
+
+
+@router.delete("/{user_id}/favs/{drink_id}")
+async def delete_fav(user_id: str, drink_id: str, db: firestore.client = Depends()):
+    user_ref = db.collection("users").document(user_id)
+
+    # Check if user exists
+    if not user_ref.get().exists:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Remove drink ID from favourite drinks array if it exists
+    user_doc = user_ref.get().to_dict()
+    if drink_id in user_doc["favourite_drinks"]:
+        user_doc["favourite_drinks"].remove(drink_id)
+        user_ref.set(user_doc)
+
+    return User(**user_ref.get().to_dict())
