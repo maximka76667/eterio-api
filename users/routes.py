@@ -57,6 +57,11 @@ def create_user(user: UserCreate, db: firestore.client = Depends()):
     return user_doc.get().to_dict()
 
 
+@router.get("/me", status_code=200, response_model=UserInDb)
+def get_current_user(current_user: UserInDb = Depends(require_authentication)):
+    return current_user
+
+
 # Get user by id
 @router.get("/{user_id}", response_model=User)
 def get_user(user_id: str, db: firestore.client = Depends()):
