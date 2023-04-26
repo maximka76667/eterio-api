@@ -10,16 +10,16 @@ router = APIRouter()
 
 
 @router.post("/", response_model=DrinkOutDB)
-async def create_drink(drink: DrinkIn, bd: firestore.client = Depends()):
-    doc_ref = bd.collection("drinks").document()
+async def create_drink(drink: DrinkIn, db: firestore.client = Depends()):
+    doc_ref = db.collection("drinks").document()
     doc_ref.set(jsonable_encoder(drink))
     drink_in_db = DrinkInDB(**drink.dict(), id=doc_ref.id)
     return drink_in_db
 
 
 @router.get("/{drink_id}", response_model=DrinkOutDB)
-async def get_drink(drink_id: str, bd: firestore.client = Depends()):
-    doc_ref = bd.collection("drinks").document(drink_id)
+async def get_drink(drink_id: str, db: firestore.client = Depends()):
+    doc_ref = db.collection("drinks").document(drink_id)
     drink = doc_ref.get()
     if drink.exists:
         drink_data = drink.to_dict()
@@ -30,8 +30,8 @@ async def get_drink(drink_id: str, bd: firestore.client = Depends()):
 
 
 @router.get("/", response_model=List[DrinkOutDB])
-async def get_drinks(bd: firestore.client = Depends()):
-    drinks = bd.collection("drinks").stream()
+async def get_drinks(db: firestore.client = Depends()):
+    drinks = db.collection("drinks").stream()
     drinks_list = []
     for drink in drinks:
         drink_data = drink.to_dict()
@@ -41,8 +41,8 @@ async def get_drinks(bd: firestore.client = Depends()):
 
 
 @router.put("/{drink_id}", response_model=DrinkOutDB)
-async def update_drink(drink_id: str, drink: DrinkIn, bd: firestore.client = Depends()):
-    doc_ref = bd.collection("drinks").document(drink_id)
+async def update_drink(drink_id: str, drink: DrinkIn, db: firestore.client = Depends()):
+    doc_ref = db.collection("drinks").document(drink_id)
     if doc_ref.get().exists:
         doc_ref.update(jsonable_encoder(drink))
         drink_in_db = DrinkInDB(**drink.dict(), id=drink_id)
@@ -52,8 +52,8 @@ async def update_drink(drink_id: str, drink: DrinkIn, bd: firestore.client = Dep
 
 
 @router.delete("/{drink_id}")
-async def delete_drink(drink_id: str, bd: firestore.client = Depends()):
-    doc_ref = bd.collection("drinks").document(drink_id)
+async def delete_drink(drink_id: str, db: firestore.client = Depends()):
+    doc_ref = db.collection("drinks").document(drink_id)
     if doc_ref.get().exists:
         doc_ref.delete()
         return {"message": "Drink deleted successfully"}

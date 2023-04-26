@@ -5,6 +5,8 @@ from firebase_admin import firestore
 from fastapi.responses import JSONResponse
 from fastapi import HTTPException
 import bcrypt
+from users.auth import require_authentication
+
 
 from users.models import UserModel
 from users.schemas import User, UserCreate, UserInDb, UserUpdate
@@ -14,19 +16,15 @@ router = APIRouter()
 
 # Get all users
 @router.get("/", response_model=list[User])
-async def get_users(db: firestore.client = Depends()):
+async def get_users(
+    db: firestore.client = Depends(),
+    current_user: UserInDb = Depends(require_authentication),
+):
     users = db.collection("users").stream()
     result = []
     for user in users:
         user_data = user.to_dict()
-        result.append(
-            User(
-                id=user.id,
-                email=user_data["email"],
-                name=user_data["name"],
-                favourite_drinks=user_data["favourite_drinks"],
-            )
-        )
+        result.append(User(**user_data))
     return result
 
 
