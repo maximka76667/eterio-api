@@ -1,9 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi import status
 from typing import Dict
 from firebase_admin import firestore
 from fastapi.responses import JSONResponse
-from fastapi import HTTPException
 import bcrypt
 from users.auth import require_authentication
 
@@ -107,8 +106,15 @@ def delete_user(user_id: str, db: firestore.client = Depends()):
         raise HTTPException(status_code=404, detail="User not found")
 
 
-@router.put("/{user_id}/favs/{drink_id}")
-async def add_fav(user_id: str, drink_id: str, db: firestore.client = Depends()):
+# Add fav
+@router.put("/favs/{drink_id}")
+async def add_fav(
+    drink_id: str,
+    db: firestore.client = Depends(),
+    current_user: UserInDb = Depends(require_authentication),
+):
+    user_id = current_user.dict().get("id")
+
     user_ref = db.collection("users").document(user_id)
     user_doc = user_ref.get()
 
@@ -127,8 +133,14 @@ async def add_fav(user_id: str, drink_id: str, db: firestore.client = Depends())
     return User(**user_ref.get().to_dict())
 
 
-@router.delete("/{user_id}/favs/{drink_id}")
-async def delete_fav(user_id: str, drink_id: str, db: firestore.client = Depends()):
+@router.delete("/favs/{drink_id}")
+async def delete_fav(
+    drink_id: str,
+    db: firestore.client = Depends(),
+    current_user: UserInDb = Depends(require_authentication),
+):
+    user_id = current_user.dict().get("id")
+
     user_ref = db.collection("users").document(user_id)
 
     # Check if user exists
