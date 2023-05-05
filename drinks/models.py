@@ -9,3 +9,4 @@ class Drink(BaseModel):
     ingredients: Dict[str, int]
     extra: List[str]
     description: str
+    is_community: bool

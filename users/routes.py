@@ -61,6 +61,31 @@ def get_current_user(current_user: UserInDb = Depends(require_authentication)):
     return current_user
 
 
+# Update me
+@router.put("/me", response_model=User)
+def update_me(
+    user: UserUpdate,
+    current_user: UserInDb = Depends(require_authentication),
+    db: firestore.client = Depends(),
+):
+    user_id = current_user.dict().get("id")
+
+    users_ref = db.collection("users")
+    user_update_doc = users_ref.document(user_id)
+    user_update = user_update_doc.get()
+
+    email = user.dict()["email"]
+
+    if user_update.to_dict().get("email") != email:
+        if len(users_ref.where("email", "==", email).get()) != 0:
+            raise HTTPException(status_code=401, detail="Email already exists")
+
+    user_update_doc.update(user.dict())
+
+    updated_user = user_update_doc.get()
+    return User(**updated_user.to_dict())
+
+
 # Get user by id
 @router.get("/{user_id}", response_model=User)
 def get_user(user_id: str, db: firestore.client = Depends()):
