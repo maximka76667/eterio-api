@@ -14,7 +14,7 @@ class DrinkOut(BaseModel):
     ingredients: Dict[str, int]
     extra: List[str]
     description: str
-    is_community: bool
+    is_community: bool = False
 
 
 class DrinkOutDB(DrinkOut):
@@ -28,4 +28,4 @@ class DrinkIn(BaseModel):
     ingredients: Dict[str, int]
     extra: List[str]
     description: str
-    is_community: bool
+    is_community: bool = False

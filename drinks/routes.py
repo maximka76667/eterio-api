@@ -12,7 +12,13 @@ router = APIRouter()
 @router.post("/", response_model=DrinkOutDB)
 async def create_drink(drink: DrinkIn, db: firestore.client = Depends()):
     doc_ref = db.collection("drinks").document()
-    doc_ref.set(jsonable_encoder(drink))
+    # doc_ref.set(jsonable_encoder(drink))
+
+    drink_data = drink.dict()
+
+    if drink_data["name"] == "" and drink_data["code"] == "":
+        raise HTTPException(status_code=400, detail="Name and code are required")
+
     drink_in_db = DrinkInDB(**drink.dict(), id=doc_ref.id)
     return drink_in_db
 
