@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Optional
 
-from users.schemas import UserInDb
+from users.models import UserInDb
 
 from users.auth import router as auth_router
 from users.routes import router as users_router

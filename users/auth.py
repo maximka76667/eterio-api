@@ -13,8 +13,7 @@ from datetime import datetime, timedelta
 import jwt
 
 
-from users.models import UserModel
-from users.schemas import UserLogin, UserInDb, UserUpdate
+from users.models import UserLogin, UserInDb, UserUpdate
 
 router = APIRouter()
 
