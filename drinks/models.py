@@ -12,6 +12,7 @@ class Drink(BaseModel):
     is_community: bool = False
     favorites = []
     author: str
+    category: str
 
 
 class DrinkInDb(Drink):

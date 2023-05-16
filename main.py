@@ -13,6 +13,7 @@ from users.models import UserInDb
 from users.auth import router as auth_router
 from users.routes import router as users_router
 from drinks.routes import router as drinks_router
+from categories.routes import router as categories_router
 
 
 # Create a Firebase Admin SDK credentials object
@@ -68,6 +69,6 @@ app.add_middleware(
 )
 
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
-
+app.include_router(categories_router, prefix="/categories", tags=["categories"])
 app.include_router(users_router, prefix="/users", tags=["users"])
 app.include_router(drinks_router, prefix="/drinks", tags=["drinks"])
