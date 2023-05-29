@@ -26,40 +26,6 @@ app = FastAPI()
 
 bearer_scheme = HTTPBearer()
 
-
-# Define get_current_user dependency
-async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
-) -> Optional[UserInDb]:
-    try:
-        token = credentials.credentials
-        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        user_id = payload.get("sub")
-        user_email = payload.get("email")
-        user_name = payload.get("name")
-        user_favourite_drinks = payload.get("favourite_drinks", [])
-        if not user_id or not user_email or not user_name:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
-            )
-        return UserInDb(
-            id=user_id,
-            email=user_email,
-            name=user_name,
-            password="",
-            favourite_drinks=user_favourite_drinks,
-        )
-    except JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
-        )
-
-
-# Define authentication middleware
-async def auth_middleware(request: Request, user: UserInDb = Depends(get_current_user)):
-    request.state.user = user
-
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

@@ -16,7 +16,6 @@ router = APIRouter()
 @router.get("/", response_model=list[User])
 async def get_users(
     db: firestore.client = Depends(),
-    current_user: UserInDb = Depends(require_authentication),
 ):
     users = db.collection("users").stream()
     result = []
