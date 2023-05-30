@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.get("/", response_model=List[CategoryInDb])
-async def get_drinks(db: firestore.client = Depends()):
+async def get_categories(db: firestore.client = Depends()):
     categories = db.collection("categories").stream()
     categories_list = []
     for category in categories:

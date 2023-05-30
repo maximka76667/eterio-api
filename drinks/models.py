@@ -4,7 +4,7 @@ from typing import List, Dict
 
 class Drink(BaseModel):
     name: str
-    img: str = "https://www.uchicagomedicine.org/-/media/images/ucmc/forefront/channel-pages/health-and-wellness/carbonated-water-universal-832x469.jpg"
+    img: str
     code: str
     ingredients: Dict[str, int]
     extra: List[str]
@@ -12,6 +12,7 @@ class Drink(BaseModel):
     is_community: bool = False
     favorites = []
     author: str
+    date: str
     category: str
 
 
