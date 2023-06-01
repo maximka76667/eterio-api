@@ -1,2 +1,4 @@
 *.json
 .space
+.env
+Spacefile

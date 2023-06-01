@@ -46,7 +46,7 @@ def create_user(user: UserCreate, db: firestore.client = Depends()):
         id=user.id,
         email=raw_user["email"],
         name=raw_user["name"],
-        avatar=raw_user["avatar"],
+        avatar="https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg",
         password=hashed_password,
     )
 

@@ -17,9 +17,22 @@ from categories.routes import router as categories_router
 from bottles.routes import router as bottles_router
 
 
+from decouple import config
+
 # Create a Firebase Admin SDK credentials object
 cred = credentials.Certificate(
-    "alcopedia-14413-firebase-adminsdk-zanl0-a158742791.json"
+    {
+        "type": "service_account",
+        "project_id": config("FIREBASE_PROJECT_ID"),
+        "private_key_id": config("PRIVATE_KEY_ID"),
+        "private_key": config("FIREBASE_PRIVATE_KEY").replace("\\n", "\n"),
+        "client_email": config("FIREBASE_CLIENT_EMAIL"),
+        "client_id": config("CLIENT_ID"),
+        "auth_uri": config("AUTH_URI"),
+        "token_uri": config("TOKEN_URI"),
+        "auth_provider_x509_cert_url": config("AUTH_PROVIDER_X509_CERT_URL"),
+        "client_x509_cert_url": config("CLIENT_X509_CERT_URL"),
+    }
 )
 
 initialize_app(cred)
