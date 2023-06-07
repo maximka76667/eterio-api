@@ -61,8 +61,18 @@ async def update_drink(drink_id: str, drink: Drink, db: firestore.client = Depen
 
 
 @router.delete("/{drink_id}")
-async def delete_drink(drink_id: str, db: firestore.client = Depends()):
+async def delete_drink(
+    drink_id: str,
+    db: firestore.client = Depends(),
+    current_user: UserInDb = Depends(require_authentication),
+):
     doc_ref = db.collection("drinks").document(drink_id)
+
+    drink = doc_ref.get().to_dict()
+
+    if drink.get("author") != current_user.id:
+        raise HTTPException(status_code=403, detail="Current user is not an author")
+
     if doc_ref.get().exists:
         doc_ref.delete()
         return {"message": "Drink deleted successfully"}

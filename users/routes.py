@@ -97,7 +97,15 @@ def get_user(user_id: str, db: firestore.client = Depends()):
 
 # Update user
 @router.put("/{user_id}", response_model=User)
-def update_user(user_id: str, user: UserUpdate, db: firestore.client = Depends()):
+def update_user(
+    user_id: str,
+    user: UserUpdate,
+    db: firestore.client = Depends(),
+    current_user: UserInDb = Depends(require_authentication),
+):
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="Forbidden")
+
     users_ref = db.collection("users")
     user_update_doc = users_ref.document(user_id)
     user_update = user_update_doc.get()
@@ -119,7 +127,14 @@ def update_user(user_id: str, user: UserUpdate, db: firestore.client = Depends()
 
 # Delete user
 @router.delete("/{user_id}", status_code=200, response_model=User)
-def delete_user(user_id: str, db: firestore.client = Depends()):
+def delete_user(
+    user_id: str,
+    db: firestore.client = Depends(),
+    current_user: UserInDb = Depends(require_authentication),
+):
+    if current_user.id != "zcZR2Gqu5ViXjEvqsenQ":
+        raise HTTPException(status_code=403, detail="Forbidden")
+
     doc_ref = db.collection("users").document(user_id)
     doc = doc_ref.get()
     if doc.exists:
