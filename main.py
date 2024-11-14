@@ -16,6 +16,13 @@ from drinks.routes import router as drinks_router
 from categories.routes import router as categories_router
 from bottles.routes import router as bottles_router
 
+# Limiter
+from fastapi import FastAPI, Request, Response, status
+from fastapi.middleware.cors import CORSMiddleware
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 
 from decouple import config
 
@@ -37,9 +44,17 @@ cred = credentials.Certificate(
 )
 
 initialize_app(cred)
+
+# Limiter
+limiter = Limiter(key_func=get_remote_address, application_limits=["40/5seconds"])
+
+# Initialize App
 app = FastAPI()
 
 bearer_scheme = HTTPBearer()
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,
@@ -48,6 +63,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(SlowAPIMiddleware) ## Rate-limit all request
 
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
 app.include_router(categories_router, prefix="/categories", tags=["categories"])
