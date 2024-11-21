@@ -1,17 +1,17 @@
 # Eterio ![image](https://github.com/user-attachments/assets/f96cf865-81c7-448e-84b9-5b57dac47945)
 
-This project is a cocktails and drinks library, which i did as my final Superior Grade project.
-Demonstration: (https://maximka76667.github.io/eterio)
+This project is a cocktails and drinks library, which i did as my final Superior Grade project.  
+[**Demonstration**](https://maximka76667.github.io/eterio)
 
 
 
-This repository is a backend part of the project.  
-Written on Python + FastAPI + Google Firebase.  
+This repository is a **backend** part of the project.  
+Written on **`Python`** + **`FastAPI`** + **`Google Firebase`**.  
 
-Deployed using Docker container and Google Cloud Run.  
-API URL: (https://eterio-api-489286482375.europe-southwest1.run.app)
+Deployed using **`Docker`** container and **`Google Cloud Run`**.  
+*Google Cloud URL*: (https://eterio-api-489286482375.europe-southwest1.run.app)
 
-Frontend repo: https://github.com/maximka76667/eterio
+*Frontend repo*: https://github.com/maximka76667/eterio
 
 ## Usage (routes)
 
